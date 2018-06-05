@@ -1,0 +1,1 @@
+# Konzolová aplikace ukazující použití Fluent Validation
