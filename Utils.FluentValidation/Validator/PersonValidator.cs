@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FluentValidation;
+using FluentValidation.Results;
 using Utils.FluentValidation.Entity;
 
 namespace Utils.FluentValidation.Validator
@@ -18,8 +19,7 @@ namespace Utils.FluentValidation.Validator
         {
             RuleFor(person => person.FirstName)
                 .NotEmpty()
-                .NotNull()
-                .WithMessage("First name is empty");
+                .NotNull();
 
             RuleFor(person => person.LastName)
                 .NotEqual(person => person.FirstName)
@@ -28,27 +28,56 @@ namespace Utils.FluentValidation.Validator
             RuleFor(person => person.DateOfBirth)
                 .NotEqual(DateTime.Now)
                 .WithMessage("Inserted date could not be today");
-
+            
+            // Just validate referenced object
             RuleFor(person => person.ReferenceToAnotherClass)
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull()
-                .Must(SpecialPropertyValidator)
-                .WithMessage("ReferenceToAnotherClass is not valid");
+                    .WithMessage("ReferenceToAnotherClass is null from SimplePropertyValidator")
+               .Must(SimplePropertyValidator)
+                    .WithMessage("ReferenceToAnotherClass is not valid by SimplePropertyValidator ");
+            
+            // Validate referenced object and print errors
+            RuleFor(person => person.ReferenceToAnotherClass)
+                .Cascade(CascadeMode.StopOnFirstFailure)
+                .NotNull()
+                    .WithMessage("ReferenceToAnotherClass is null from ExtendedPropertyValidator")
+                .Custom((person, context) =>
+                {
+                    ValidationResult result = ExtendedPropertyValidator(person);   
+                    if (!result.IsValid)
+                    {
+                        context.AddFailure(
+                            string.Join(",", result.Errors)
+                            +" by ExtendedPropertyValidator");
+                    } 
+                });
         }
 
         /// <summary>
         /// Validate property which is reference to another class which needs to be valid too
         /// </summary>
         /// <param name="SpecialProperty">Instance of referenced class</param>
-        /// <returns>True if referenced class is valid by its own validator</returns>
-        private bool SpecialPropertyValidator(SpecialProperty SpecialProperty)
+        /// <returns>ValidationResult</returns>
+        private ValidationResult ExtendedPropertyValidator(SpecialProperty SpecialProperty)
         {
             // Validator for given class
             SpecialPropertyValidator specialPropertyValidator = new SpecialPropertyValidator();
-            
-            return specialPropertyValidator.Validate(SpecialProperty).IsValid;
+            return specialPropertyValidator.Validate(SpecialProperty);
         }
 
+
+        /// <summary>
+        /// Validate property which is reference to another class which needs to be valid too
+        /// </summary>
+        /// <param name="SpecialProperty">Instance of referenced class</param>
+        /// <returns>True if referenced class is valid by its own validator</returns>
+        private bool SimplePropertyValidator(SpecialProperty SpecialProperty)
+        {
+            // Validator for given class
+            SpecialPropertyValidator specialPropertyValidator = new SpecialPropertyValidator();
+            return specialPropertyValidator.Validate(SpecialProperty).IsValid;
+        }
 
     }
 }

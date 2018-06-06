@@ -12,8 +12,7 @@ namespace Utils.FluentValidation
         {
             RuleFor(specialProperty => specialProperty.Property)
                 .NotEmpty()
-                .NotNull()
-                .WithMessage("Property is empty or null"); 
+                .NotNull();
         }
     }
 }

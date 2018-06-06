@@ -27,7 +27,7 @@ namespace Utils.FluentValidation
             {
                 FirstName = "Jan",
                 LastName = "Novák",
-                DateOfBirth = new DateTime(1993, 8, 24),
+                DateOfBirth = new DateTime(1994, 1, 1),
                 ReferenceToAnotherClass = null // null is against Validator rules
             };
 
@@ -36,7 +36,7 @@ namespace Utils.FluentValidation
             {
                 FirstName = "Jan",
                 LastName = "Novák",
-                DateOfBirth = new DateTime(1993, 8, 24),
+                DateOfBirth = new DateTime(1995, 1, 1),
                 ReferenceToAnotherClass = new SpecialProperty()
                 {
                     Property = ""
@@ -82,7 +82,7 @@ namespace Utils.FluentValidation
             ValidationResult results = validator.Validate(p);
             if (results.IsValid)
             {
-                Console.WriteLine("ok");
+                Console.WriteLine("Valid");
             }
             else
             {
