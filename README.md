@@ -1,11 +1,11 @@
-# Konzolová aplikace ukazující pouití Fluent Validation
-Fluent je typ zápisu, kdy metoda vrací instanci objektu, ve které se nachází. Èasto je pouit v programovacích modelech napø. [Builder pattern](https://ucitel.sps-prosek.cz/~maly/PRG/materials/csharp/#builder), vyuívá ho také LINQ.
+ï»¿# KonzolovÃ¡ aplikace ukazujÃ­cÃ­ pouÅ¾itÃ­ Fluent Validation
+Fluent je typ zÃ¡pisu, kdy metoda vracÃ­ instanci objektu, ve kterÃ© se nachÃ¡zÃ­. ÄŒasto je pouÅ¾it v programovacÃ­ch modelech napÅ™. [Builder pattern](https://ucitel.sps-prosek.cz/~maly/PRG/materials/csharp/#builder), vyuÅ¾Ã­vÃ¡ ho takÃ© LINQ.
 
-Umoòuje zápis pomocí teèkové notace viz. následující pøíklad PersonBuilder.
+UmoÅ¾Åˆuje zÃ¡pis pomocÃ­ teÄkovÃ© notace viz. nÃ¡sledujÃ­cÃ­ pÅ™Ã­klad PersonBuilder.
 
 ---
 ## Person Builder
-Metody WithEmail a WithFirstName vrací instanci tøídy PersonBuilder, tedy this.
+Metody WithEmail a WithFirstName vracÃ­ instanci tÅ™Ã­dy PersonBuilder, tedy this.
 ```csharp
 class PersonBuilder
 {
@@ -29,12 +29,12 @@ class PersonBuilder
 ...
 }
 ```
-### Vytvoøení instance Person
-Díky tomu, e metody vrací this, je moné provést zápis pomocí teèkové notace.
+### VytvoÅ™enÃ­ instance Person
+DÃ­ky tomu, Å¾e metody vracÃ­ this, je moÅ¾nÃ© provÃ©st zÃ¡pis pomocÃ­ teÄkovÃ© notace.
 ```csharp
 PersonBuilder pValidPersonBuilder = new PersonBuilder()
     .WithFirstName("Jan")
-    .WithLastName("Novák")
+    .WithLastName("NovÃ¡k")
     .WithDateOfBirth(new DateTime(1993, 1, 1))
     .WithEmail("john.doe@email.com")
     .WithReferencedClass(new ReferencedClassFromPerson()
@@ -47,7 +47,7 @@ Person pValid = pValidPersonBuilder.Build();
 ---
 ## Fluent Validation
 ![Validation Output](Resources/ValidationOutput.png)
-Pro zápis pravidel, která urèují správnost dat ve tøídì, je ve knihovnì [FluentValidation](https://github.com/JeremySkinner/fluentvalidation) pouit právì tento styl zápisu.
+Pro zÃ¡pis pravidel, kterÃ¡ urÄujÃ­ sprÃ¡vnost dat ve tÅ™Ã­dÄ›, je ve knihovnÄ› [FluentValidation](https://github.com/JeremySkinner/fluentvalidation) pouÅ¾it prÃ¡vÄ› tento styl zÃ¡pisu.
 ```csharp
 RuleFor(person => person.LastName)
     .NotEmpty()
@@ -55,9 +55,9 @@ RuleFor(person => person.LastName)
     .NotEqual(person => person.FirstName)
     .WithMessage("First name and last name could not be same");
 ```
-Pro pouití je nutné:
-1) Pøidat referenci na knihovnu FluentValidation do projektu
-2) Vytvoøit Validator pro entitu
+Pro pouÅ¾itÃ­ je nutnÃ©:
+1) PÅ™idat referenci na knihovnu FluentValidation do projektu
+2) VytvoÅ™it Validator pro entitu
 ```csharp
 class PersonValidator : AbstractValidator<Person>
 {
@@ -73,11 +73,11 @@ class PersonValidator : AbstractValidator<Person>
 ...
 }
 ```
-3) Vytvoøit instanci validátoru
+3) VytvoÅ™it instanci validÃ¡toru
 ```csharp
 PersonValidator validator = new PersonValidator();
 ```
-4) Zavolat metodu Validate, pøedat jí instanci entity a zkontrolovat validitu, èi zpracovat chyby
+4) Zavolat metodu Validate, pÅ™edat jÃ­ instanci entity a zkontrolovat validitu, Äi zpracovat chyby
 ```csharp
 // p is instance of Person
 ValidationResult results = validator.Validate(p);
@@ -91,11 +91,11 @@ else
 }
 ```
 ---
-## Rozšíøení validace
-### Validace pouze jedné vlastnosti (Property)
-Nìkdy je potøeba validovat pouze jednu vlastnost entity.
+## RozÅ¡Ã­Å™enÃ­ validace
+### Validace pouze jednÃ© vlastnosti (Property)
+NÄ›kdy je potÅ™eba validovat pouze jednu vlastnost entity.
 
-1) Vytvoøit extension metodu. Ta mùe bıt umístìna v jakékoliv tøídì.
+1) VytvoÅ™it extension metodu. Ta mÅ¯Å¾e bÃ½t umÃ­stÄ›na v jakÃ©koliv tÅ™Ã­dÄ›.
 ```csharp
 /// <param name="validator">Validator for class</param>
 /// <param name="instance">Instance of class to be validated</param>
@@ -106,13 +106,13 @@ public static ValidationResult Validate<T>(this IValidator validator, T instance
     return validator.Validate(context);
 }
 ```
-2) Pøedat ji validátor entity, instanci entity a jméno vlastnosti ke kontrole
+2) PÅ™edat ji validÃ¡tor entity, instanci entity a jmÃ©no vlastnosti ke kontrole
 ```csharp
 ValidationExtensions.Validate(personValidator, pValid, "ReferenceToAnotherClass");
 ```
 
-### Validace závislıch objektù
-Pøidání pravidla, které vyuívá metodu, která validuje závislı objekt.
+### Validace zÃ¡vislÃ½ch objektÅ¯
+PÅ™idÃ¡nÃ­ pravidla, kterÃ© vyuÅ¾Ã­vÃ¡ metodu, kterÃ¡ validuje zÃ¡vislÃ½ objekt.
 ```csharp
 RuleFor(person => person.ReferenceToAnotherClass)
     .Cascade(CascadeMode.StopOnFirstFailure)
@@ -121,7 +121,7 @@ RuleFor(person => person.ReferenceToAnotherClass)
     .Must(SimplePropertyValidator)
         .WithMessage("ReferenceToAnotherClass is not valid by SimplePropertyValidator ");
 ```
-Validující metoda:
+ValidujÃ­cÃ­ metoda:
 ```csharp
 private bool SimplePropertyValidator(ReferencedClassFromPerson SpecialProperty)
 {
@@ -130,12 +130,12 @@ private bool SimplePropertyValidator(ReferencedClassFromPerson SpecialProperty)
     return specialPropertyValidator.Validate(SpecialProperty).IsValid;
 }
 ```
-Tato metoda, ale nevypisuje chyby závislého objektu.
-### Vlastní validátor
-Pokud nestaèí metody, které poskytuje knihovna FluentValidation, je moné napsat vlastní.
+Tato metoda, ale nevypisuje chyby zÃ¡vislÃ©ho objektu.
+### VlastnÃ­ validÃ¡tor
+Pokud nestaÄÃ­ metody, kterÃ© poskytuje knihovna FluentValidation, je moÅ¾nÃ© napsat vlastnÃ­.
 
-Následující kód validuje objekt _ReferencedClassFromPerson_, kterı je vlastností tøídy Person, spolu s celou instancí tøídy Person. Vyskytnou-li se chyby pøi validaci závislého objektu, tak je instnace tøídy Person neplatná a chyby jsou vypsány (vè. chyb validovovaného závislého objektu).
-1) Vlastní validátor
+NÃ¡sledujÃ­cÃ­ kÃ³d validuje objekt _ReferencedClassFromPerson_, kterÃ½ je vlastnostÃ­ tÅ™Ã­dy Person, spolu s celou instancÃ­ tÅ™Ã­dy Person. Vyskytnou-li se chyby pÅ™i validaci zÃ¡vislÃ©ho objektu, tak je instnace tÅ™Ã­dy Person neplatnÃ¡ a chyby jsou vypsÃ¡ny (vÄ. chyb validovovanÃ©ho zÃ¡vislÃ©ho objektu).
+1) VlastnÃ­ validÃ¡tor
 ```csharp
 // Validate referenced object and print errors
 RuleFor(person => person.ReferenceToAnotherClass)
@@ -153,9 +153,9 @@ RuleFor(person => person.ReferenceToAnotherClass)
         } 
     });
 ```
-2) Pomocná metoda
+2) PomocnÃ¡ metoda
 
-Metoda validující závislı objekt a vracející vısledek validace.
+Metoda validujÃ­cÃ­ zÃ¡vislÃ½ objekt a vracejÃ­cÃ­ vÃ½sledek validace.
 ```csharp
 private ValidationResult ExtendedPropertyValidator(ReferencedClassFromPerson SpecialProperty)
 {
