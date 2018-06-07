@@ -48,8 +48,11 @@ namespace Utils.FluentValidation
             Validate(pNotValidReferenceToAnotherClass, personValidator); // Error
 
             // Valid only single property via reflection
-            ValidationResult results3 = ValidationExtensions.Validate(personValidator, pValid, "SomeSpecialProperty");
-            ValidationResult results4 = ValidationExtensions.Validate(personValidator, pNotValid, "SomeSpecialProperty");
+            // true
+            ValidationResult results3 = ValidationExtensions.Validate(personValidator, pValid, "ReferenceToAnotherClass");
+            
+            // false
+            ValidationResult results4 = ValidationExtensions.Validate(personValidator, pNotValid, "ReferenceToAnotherClass");
 
         }
 
