@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Utils.FluentValidation.Entity
 {
-    class SpecialProperty
+    class ReferencedClassFromPerson
     {
         public string Property { get; set; }
 

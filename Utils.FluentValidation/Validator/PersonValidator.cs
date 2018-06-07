@@ -18,12 +18,17 @@ namespace Utils.FluentValidation.Validator
         public PersonValidator()
         {
             RuleFor(person => person.FirstName)
-                .NotEmpty()
-                .NotNull();
+                .NotEmpty();
 
             RuleFor(person => person.LastName)
+                .NotEmpty()
                 .NotEqual(person => person.FirstName)
                 .WithMessage("First name and last name could not be same");
+
+            RuleFor(person => person.Email)
+                .NotEmpty()
+                .EmailAddress()
+                .WithMessage("Email is not valid");
 
             RuleFor(person => person.DateOfBirth)
                 .NotEqual(DateTime.Now)
@@ -59,10 +64,10 @@ namespace Utils.FluentValidation.Validator
         /// </summary>
         /// <param name="SpecialProperty">Instance of referenced class</param>
         /// <returns>ValidationResult</returns>
-        private ValidationResult ExtendedPropertyValidator(SpecialProperty SpecialProperty)
+        private ValidationResult ExtendedPropertyValidator(ReferencedClassFromPerson SpecialProperty)
         {
             // Validator for given class
-            SpecialPropertyValidator specialPropertyValidator = new SpecialPropertyValidator();
+            ReferencedClassFromPersonValidator specialPropertyValidator = new ReferencedClassFromPersonValidator();
             return specialPropertyValidator.Validate(SpecialProperty);
         }
 
@@ -72,10 +77,10 @@ namespace Utils.FluentValidation.Validator
         /// </summary>
         /// <param name="SpecialProperty">Instance of referenced class</param>
         /// <returns>True if referenced class is valid by its own validator</returns>
-        private bool SimplePropertyValidator(SpecialProperty SpecialProperty)
+        private bool SimplePropertyValidator(ReferencedClassFromPerson SpecialProperty)
         {
             // Validator for given class
-            SpecialPropertyValidator specialPropertyValidator = new SpecialPropertyValidator();
+            ReferencedClassFromPersonValidator specialPropertyValidator = new ReferencedClassFromPersonValidator();
             return specialPropertyValidator.Validate(SpecialProperty).IsValid;
         }
 
