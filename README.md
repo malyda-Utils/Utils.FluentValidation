@@ -47,6 +47,7 @@ Person pValid = pValidPersonBuilder.Build();
 ---
 ## Fluent Validation
 ![Validation Output](Resources/ValidationOutput.png)
+
 Pro zápis pravidel, která určují správnost dat ve třídě, je ve knihovně [FluentValidation](https://github.com/JeremySkinner/fluentvalidation) použit právě tento styl zápisu.
 ```csharp
 RuleFor(person => person.LastName)
@@ -108,11 +109,11 @@ public static ValidationResult Validate<T>(this IValidator validator, T instance
 ```
 2) Předat ji validátor entity, instanci entity a jméno vlastnosti ke kontrole
 ```csharp
-ValidationExtensions.Validate(personValidator, pValid, "ReferenceToAnotherClass");
+ValidationExtensions.Validate(personValidator, pValid, "Email");
 ```
 
 ### Validace závislých objektů
-Přidání pravidla, které využívá metodu, která validuje závislý objekt.
+Přidání pravidla, které využívá pomocné metody. Ta vrací True/False, dle úspěšnosti validace závislého objektu.
 ```csharp
 RuleFor(person => person.ReferenceToAnotherClass)
     .Cascade(CascadeMode.StopOnFirstFailure)
@@ -121,7 +122,7 @@ RuleFor(person => person.ReferenceToAnotherClass)
     .Must(SimplePropertyValidator)
         .WithMessage("ReferenceToAnotherClass is not valid by SimplePropertyValidator ");
 ```
-Validující metoda:
+Validující metoda vytvoří instanci validátoru pro závislý objekt a zkontroluje ho.
 ```csharp
 private bool SimplePropertyValidator(ReferencedClassFromPerson SpecialProperty)
 {
@@ -134,7 +135,9 @@ Tato metoda, ale nevypisuje chyby závislého objektu.
 ### Vlastní validátor
 Pokud nestačí metody, které poskytuje knihovna FluentValidation, je možné napsat vlastní.
 
-Následující kód validuje objekt _ReferencedClassFromPerson_, který je vlastností třídy Person, spolu s celou instancí třídy Person. Vyskytnou-li se chyby při validaci závislého objektu, tak je instnace třídy Person neplatná a chyby jsou vypsány (vč. chyb validovovaného závislého objektu).
+Následující kód validuje objekt Person spolu s jeho vlastnotí, která je typu jiného objektu (_ReferencedClassFromPerson_). 
+
+Vyskytnou-li se chyby při validaci závislého objektu, tak je instnace třídy Person neplatná a chyby jsou vypsány (vč. chyb validovovaného závislého objektu).
 1) Vlastní validátor
 ```csharp
 // Validate referenced object and print errors

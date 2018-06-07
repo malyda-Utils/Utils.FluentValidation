@@ -17,18 +17,9 @@ namespace Utils.FluentValidation
         {
             CreatePersonsViaBuilder();
 
-            // Print persons
-            Console.WriteLine("pValid:");
-            Console.WriteLine(pValid);
-            Console.WriteLine();
+            PrintPersons();
 
-            Console.WriteLine("pNotValid:");
-            Console.WriteLine(pNotValid);
-            Console.WriteLine();
 
-            Console.WriteLine("pNotValidReferenceToAnotherClass:");
-            Console.WriteLine(pNotValidReferenceToAnotherClass);
-            Console.WriteLine();
             // Create instance of validator
             PersonValidator personValidator = new PersonValidator();
 
@@ -109,7 +100,7 @@ namespace Utils.FluentValidation
                     .WithEmail("john.doe@email.com")
                     .WithReferencedClass(new ReferencedClassFromPerson()
                     {
-                        Property = "some value"
+                        Property = ""
                     });
 
             pNotValidReferenceToAnotherClass = pNotValidReferenceToAnotherClassBuilder.Build();
@@ -154,6 +145,21 @@ namespace Utils.FluentValidation
                     Property = ""
                 }
             };
+        }
+        static void PrintPersons()
+        {
+            // Print persons
+            Console.WriteLine("pValid:");
+            Console.WriteLine(pValid);
+            Console.WriteLine();
+
+            Console.WriteLine("pNotValid:");
+            Console.WriteLine(pNotValid);
+            Console.WriteLine();
+
+            Console.WriteLine("pNotValidReferenceToAnotherClass:");
+            Console.WriteLine(pNotValidReferenceToAnotherClass);
+            Console.WriteLine();
         }
     }
 }
